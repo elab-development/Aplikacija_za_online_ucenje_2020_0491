@@ -24,6 +24,11 @@ class User extends Authenticatable
         return $this->hasMany(Course::class, 'teacher_id');
     }
 
+    public function kursevi_studenta()
+    {
+        return $this->belongsToMany(Course::class, 'course_user');
+    }
+
     /**
      * The attributes that should be hidden for arrays.
      *

@@ -13,6 +13,6 @@ class CourseSeeder extends Seeder
      */
     public function run()
     {
-        //
+        \App\Models\Course::factory(5)->create(); // Kreira 5 kurseva
     }
 }
