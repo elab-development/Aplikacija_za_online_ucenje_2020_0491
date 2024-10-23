@@ -14,6 +14,7 @@ class CreateCourseUserTable extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('course_id')->constrained('courses')->onDelete('cascade');
             $table->date('datum_upisa'); // Dodajemo datum upisa
+            $table->string('napomena');
             $table->timestamps();
         });
     }
