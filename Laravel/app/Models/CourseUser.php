@@ -14,7 +14,7 @@ class CourseUser extends Model
         'datum_upisa',
     ];
 
-    public $timestamps = true; // Koristimo timestamps
+    public $timestamps = true; 
 
     protected $casts = [
         'datum_upisa' => 'date',
