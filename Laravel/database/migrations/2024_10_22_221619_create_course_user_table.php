@@ -8,7 +8,7 @@ class CreateCourseUserTable extends Migration
 {
     public function up()
     {
-        Schema::create('course_user', function (Blueprint $table) {
+        Schema::create('course_users', function (Blueprint $table) {
             $table->id();
             //datum upisa
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');

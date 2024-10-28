@@ -13,7 +13,7 @@ class DropNapomenaFromCourseUserTable extends Migration
      */
     public function up()
     {
-        Schema::table('course_user', function (Blueprint $table) {
+        Schema::table('course_users', function (Blueprint $table) {
             $table->dropColumn('napomena');
         });
     }
@@ -25,7 +25,7 @@ class DropNapomenaFromCourseUserTable extends Migration
      */
     public function down()
     {
-        Schema::table('course_user', function (Blueprint $table) {
+        Schema::table('course_users', function (Blueprint $table) {
             $table->string('napomena')->after('datum_upisa');
         });
     }

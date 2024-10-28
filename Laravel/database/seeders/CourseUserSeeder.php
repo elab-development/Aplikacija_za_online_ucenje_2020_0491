@@ -16,7 +16,7 @@ class CourseUserSeeder extends Seeder
 
         // Kreiramo 20 random zapisa u pivot tabeli
         for ($i = 0; $i < 20; $i++) {
-            DB::table('course_user')->insert([
+            DB::table('course_users')->insert([
                 'user_id' => $students[array_rand($students)],
                 'course_id' => $courses[array_rand($courses)],
                 'datum_upisa' => now()->subDays(rand(1, 30)), // Random datum unutar proteklih 30 dana

@@ -14,7 +14,7 @@ class CourseUserController extends Controller
         $courseUsers = CourseUser::with('course', 'user')->get();
         return response()->json($courseUsers, 200);
     }
-
+    /// napravi mi za studenta da vrati njegov kurs
     public function show($id)
     {
         $courseUser = CourseUser::with('course', 'user')->findOrFail($id);
@@ -26,14 +26,18 @@ class CourseUserController extends Controller
         $validator = Validator::make($request->all(), [
             'user_id' => 'required|exists:users,id',
             'course_id' => 'required|exists:courses,id',
-            'datum_upisa' => 'required|date',
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-
-        $courseUser = CourseUser::create($request->all());
+    
+        $courseUser = CourseUser::create([
+            'user_id' => $request->user_id,
+            'course_id' => $request->course_id,
+            'datum_upisa' => now(), 
+        ]);
+    
         return response()->json($courseUser, 201);
     }
 
