@@ -11,7 +11,7 @@ class CourseController extends Controller
 {
     public function index()
     {
-        $courses = Course::with('teacher', 'videos', 'students')->get();
+        $courses = Course::with('teacher', 'videos')->get();
         return response()->json($courses, 200);
     }
 
