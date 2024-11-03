@@ -1,14 +1,39 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import HomePage from './komponente/HomePage';
+import RegisterPage from './komponente/RegisterPage';
+import LoginPage from './komponente/LoginPage';
+import Navbar from './komponente/Navbar';
 
 const App = () => {
+    const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
+
+    // Funkcija za ručno ažuriranje stanja prijave kada se korisnik uspešno prijavi ili registruje
+    const handleLogin = () => {
+        setIsLoggedIn(true);
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        setIsLoggedIn(false);
+    };
+
     return (
         <Router>
-            <Routes>
-                <Route path="/" element={<HomePage />} />
-                {/* Dodaj druge rute po potrebi */}
-            </Routes>
+            <Navbar isLoggedIn={isLoggedIn} handleLogout={handleLogout} />
+            <div className="main-content">
+                <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route
+                        path="/register"
+                        element={<RegisterPage handleLogin={handleLogin} />}
+                    />
+                    <Route
+                        path="/login"
+                        element={<LoginPage handleLogin={handleLogin} />}
+                    />
+                </Routes>
+            </div>
         </Router>
     );
 };
