@@ -16,7 +16,7 @@ class CourseFactory extends Factory
         return [
             'title' => $this->faker->sentence,
             'description' => $this->faker->paragraph,
-            'teacher_id' => \App\Models\User::factory(), 
+            'teacher_id' => \App\Models\User::factory()->state(['role' => 'teacher']),
         ];
     }
 }

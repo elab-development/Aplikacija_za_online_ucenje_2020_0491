@@ -14,7 +14,6 @@ class CourseUserController extends Controller
         $courseUsers = CourseUser::with('course', 'user')->get();
         return response()->json($courseUsers, 200);
     }
-    /// napravi mi za studenta da vrati njegov kurs
     public function show($id)
     {
         $courseUser = CourseUser::with('course', 'user')->findOrFail($id);
