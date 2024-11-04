@@ -11,6 +11,10 @@ const KurseviPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
+    // Paginacija
+    const [currentPage, setCurrentPage] = useState(1);
+    const coursesPerPage = 5;
+
     useEffect(() => {
         fetchCourses();
         fetchTeachers();
@@ -133,7 +137,15 @@ const KurseviPage = () => {
             return titleMatch && descriptionMatch && teacherMatch;
         });
         setFilteredCourses(filtered);
+        setCurrentPage(1); // Resetuj na prvu stranicu nakon pretrage
     };
+
+    // Paginacija - funkcionalnost
+    const indexOfLastCourse = currentPage * coursesPerPage;
+    const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
+    const currentCourses = filteredCourses.slice(indexOfFirstCourse, indexOfLastCourse);
+
+    const goToPage = (pageNumber) => setCurrentPage(pageNumber);
 
     return (
         <div className="kursevi-page">
@@ -178,7 +190,7 @@ const KurseviPage = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredCourses.map((course) => (
+                    {currentCourses.map((course) => (
                         <CourseRow 
                             key={course.id} 
                             course={course} 
@@ -188,6 +200,19 @@ const KurseviPage = () => {
                     ))}
                 </tbody>
             </table>
+
+            {/* Paginacija */}
+            <div className="pagination">
+                {[...Array(Math.ceil(filteredCourses.length / coursesPerPage)).keys()].map(number => (
+                    <button 
+                        key={number + 1} 
+                        onClick={() => goToPage(number + 1)}
+                        className={currentPage === number + 1 ? 'active-page' : ''}
+                    >
+                        {number + 1}
+                    </button>
+                ))}
+            </div>
 
             {/* Modal za uređivanje kursa */}
             {isModalOpen && (
