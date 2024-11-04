@@ -4,6 +4,7 @@ import HomePage from './komponente/HomePage';
 import RegisterPage from './komponente/RegisterPage';
 import LoginPage from './komponente/LoginPage';
 import Navbar from './komponente/Navbar';
+import KurseviPage from './komponente/KurseviPage';
 
 const App = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
@@ -32,6 +33,8 @@ const App = () => {
                         path="/login"
                         element={<LoginPage handleLogin={handleLogin} />}
                     />
+                    <Route path="/courses" element={<KurseviPage />} /> 
+
                 </Routes>
             </div>
         </Router>

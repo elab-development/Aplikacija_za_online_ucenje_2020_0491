@@ -21,12 +21,15 @@ const Navbar = ({ isLoggedIn, handleLogout }) => {
 
     return (
         <nav className={`navbar ${isSticky ? 'sticky' : ''}`}>
-            <h1 className="navbar-brand">Online Učenje</h1>
+            <h1 className="navbar-brand">Online učenje</h1>
             <div className="navbar-links">
                 {isLoggedIn ? (
+                    <>
+                    <Link to="/courses" className="nav-link">Kursevi</Link>
                     <button onClick={handleLogout} className="nav-button">
                         Logout
                     </button>
+                </>
                 ) : (
                     <>
                         <Link to="/login" className="nav-link">Login</Link>
