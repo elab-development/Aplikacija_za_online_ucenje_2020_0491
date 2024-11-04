@@ -27,4 +27,11 @@ class UserController extends Controller
 
         return response()->json(['message' => 'User deleted successfully'], 200);
     }
+
+    public function getTeachers()
+    {
+        $teachers = User::where('role', 'teacher')->get();
+        return response()->json($teachers, 200);
+    }
+    
 }

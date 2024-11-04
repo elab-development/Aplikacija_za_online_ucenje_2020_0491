@@ -47,3 +47,5 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', UserController::class);
 });
+
+Route::get('/teachers', [UserController::class, 'getTeachers'])->middleware('auth:sanctum');
