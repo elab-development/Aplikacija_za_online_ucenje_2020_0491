@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import './KurseviPage.css';
+import CourseRow from './CourseRow';
 
 const KurseviPage = () => {
     const [courses, setCourses] = useState([]);
+    const [filteredCourses, setFilteredCourses] = useState([]);
     const [teachers, setTeachers] = useState([]);
     const [newCourse, setNewCourse] = useState({ title: '', description: '', teacher_id: '' });
+    const [search, setSearch] = useState({ title: '', description: '', teacher_id: '' });
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
     useEffect(() => {
         fetchCourses();
-        fetchTeachers(); // Učitaj profesore pri inicijalizaciji stranice
+        fetchTeachers();
     }, []);
 
     const fetchCourses = async () => {
@@ -18,6 +21,7 @@ const KurseviPage = () => {
             const response = await fetch('http://localhost:8000/api/courses');
             const data = await response.json();
             setCourses(data);
+            setFilteredCourses(data); // Inicijalno postavi filtrirane kurseve na sve kurseve
         } catch (error) {
             console.error('Error fetching courses:', error);
         }
@@ -25,16 +29,14 @@ const KurseviPage = () => {
 
     const fetchTeachers = async () => {
         try {
-            const token = localStorage.getItem('token'); // Preuzimamo token iz lokalne memorije
-            
+            const token = localStorage.getItem('token');
             const response = await fetch('http://localhost:8000/api/teachers', {
                 method: 'GET',
                 headers: {
-                    'Authorization': `Bearer ${token}`, // Dodajemo token u Authorization header
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
             });
-            
             if (response.ok) {
                 const data = await response.json();
                 setTeachers(data);
@@ -48,8 +50,7 @@ const KurseviPage = () => {
 
     const handleDeleteCourse = async (id) => {
         try {
-            const token = localStorage.getItem('token'); // Preuzimamo token iz lokalne memorije
-
+            const token = localStorage.getItem('token');
             const response = await fetch(`http://localhost:8000/api/courses/${id}`, {
                 method: 'DELETE',
                 headers: {
@@ -57,9 +58,8 @@ const KurseviPage = () => {
                     'Content-Type': 'application/json',
                 },
             });
-            
             if (response.ok) {
-                fetchCourses(); // Ponovo preuzimamo kurseve ako je brisanje uspešno
+                fetchCourses();
             } else {
                 const errorData = await response.json();
                 console.error('Error deleting course:', errorData.message);
@@ -87,8 +87,7 @@ const KurseviPage = () => {
 
     const handleUpdateCourse = async () => {
         try {
-            const token = localStorage.getItem('token'); // Preuzimamo token iz lokalne memorije
-
+            const token = localStorage.getItem('token');
             const response = await fetch(`http://localhost:8000/api/courses/${newCourse.id}`, {
                 method: 'PUT',
                 headers: {
@@ -108,8 +107,7 @@ const KurseviPage = () => {
 
     const handleAddCourse = async () => {
         try {
-            const token = localStorage.getItem('token'); // Preuzimamo token iz lokalne memorije
-
+            const token = localStorage.getItem('token');
             const response = await fetch('http://localhost:8000/api/courses', {
                 method: 'POST',
                 headers: {
@@ -127,12 +125,50 @@ const KurseviPage = () => {
         }
     };
 
+    const handleSearch = () => {
+        const filtered = courses.filter(course => {
+            const titleMatch = course.title.toLowerCase().includes(search.title.toLowerCase());
+            const descriptionMatch = course.description.toLowerCase().includes(search.description.toLowerCase());
+            const teacherMatch = search.teacher_id ? course.teacher_id === parseInt(search.teacher_id) : true;
+            return titleMatch && descriptionMatch && teacherMatch;
+        });
+        setFilteredCourses(filtered);
+    };
+
     return (
         <div className="kursevi-page">
             <div className="header">
                 <h2>Lista kurseva</h2>
                 <button onClick={openAddModal} className="add-button">Dodaj kurs</button>
             </div>
+
+            <div className="search-form">
+                <input
+                    type="text"
+                    placeholder="Pretraga po naslovu"
+                    value={search.title}
+                    onChange={(e) => setSearch({ ...search, title: e.target.value })}
+                />
+                <input
+                    type="text"
+                    placeholder="Pretraga po opisu"
+                    value={search.description}
+                    onChange={(e) => setSearch({ ...search, description: e.target.value })}
+                />
+                <select
+                    value={search.teacher_id}
+                    onChange={(e) => setSearch({ ...search, teacher_id: e.target.value })}
+                >
+                    <option value="">Izaberite profesora</option>
+                    {teachers.map((teacher) => (
+                        <option key={teacher.id} value={teacher.id}>
+                            {teacher.name}
+                        </option>
+                    ))}
+                </select>
+                <button onClick={handleSearch} className="search-button">Pretraži</button>
+            </div>
+
             <table className="courses-table">
                 <thead>
                     <tr>
@@ -142,19 +178,13 @@ const KurseviPage = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {courses.map((course) => (
-                        <tr key={course.id}>
-                            <td>{course.title}</td>
-                            <td>{course.description}</td>
-                            <td>
-                                <button onClick={() => openEditModal(course)} className="action-button edit">
-                                    Edit
-                                </button>
-                                <button onClick={() => handleDeleteCourse(course.id)} className="action-button delete">
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
+                    {filteredCourses.map((course) => (
+                        <CourseRow 
+                            key={course.id} 
+                            course={course} 
+                            onEdit={openEditModal} 
+                            onDelete={handleDeleteCourse} 
+                        />
                     ))}
                 </tbody>
             </table>

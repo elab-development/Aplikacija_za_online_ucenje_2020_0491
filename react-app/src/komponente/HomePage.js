@@ -1,5 +1,7 @@
+// HomePage.js
 import React, { useEffect, useState } from 'react';
 import './HomePage.css';
+import CourseCard from './CourseCard';
 
 const HomePage = () => {
     const [courses, setCourses] = useState([]);
@@ -17,10 +19,11 @@ const HomePage = () => {
             <h2>Dostupni kursevi:</h2>
             <div className="courses-container">
                 {courses.map(course => (
-                    <div key={course.id} className="course-card">
-                        <h3>{course.title}</h3>
-                        <p>{course.description}</p>
-                    </div>
+                    <CourseCard 
+                        key={course.id} 
+                        title={course.title} 
+                        description={course.description} 
+                    />
                 ))}
             </div>
         </div>
