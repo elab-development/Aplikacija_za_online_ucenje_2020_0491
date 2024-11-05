@@ -288,3 +288,35 @@
 .search-button:hover {
     background-color: #45a049;
 }
+
+.pagination {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    color: #333;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.pagination button:hover {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.pagination .active-page {
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.2);
+    transform: scale(1.1);
+}
