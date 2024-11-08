@@ -11,6 +11,11 @@ const KurseviPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
+    const [videosModalOpen, setVideosModalOpen] = useState(false);
+    const [selectedCourseId, setSelectedCourseId] = useState(null);
+    const [videos, setVideos] = useState([]);
+    const [newVideoLink, setNewVideoLink] = useState("");
+    const [newVideoTitle, setNewVideoTitle] = useState("");
     const [sortOrder, setSortOrder] = useState('asc'); 
 
     // Paginacija
@@ -52,6 +57,71 @@ const KurseviPage = () => {
         } catch (error) {
             console.error('Error fetching teachers:', error);
         }
+    };
+
+    const fetchVideos = async (courseId) => {
+        try {
+            const token = localStorage.getItem('token');
+
+            const response = await fetch(`http://localhost:8000/api/sviKlipoviKursa/${courseId}`,{
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            const data = await response.json();
+            setVideos(data);
+            setSelectedCourseId(courseId);
+            setVideosModalOpen(true);
+        } catch (error) {
+            console.error('Error fetching videos:', error);
+        }
+    };
+
+    const addVideo = async () => {
+        try {
+            const token = localStorage.getItem('token');
+
+            const response = await fetch(`http://localhost:8000/api/videos`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ title: newVideoTitle, link: newVideoLink, course_id: selectedCourseId}),
+            });
+            if (response.ok) {
+                fetchVideos(selectedCourseId); // Osveži listu klipova
+                setNewVideoLink("");
+            }
+        } catch (error) {
+            console.error('Error adding video:', error);
+        }
+    };
+
+    const deleteVideo = async (videoId) => {
+        try {
+            const token = localStorage.getItem('token');
+
+            const response = await fetch(`http://localhost:8000/api/videos/${videoId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (response.ok) {
+                fetchVideos(selectedCourseId); // Osveži listu klipova
+            }
+        } catch (error) {
+            console.error('Error deleting video:', error);
+        }
+    };
+
+    const closeVideosModal = () => {
+        setVideosModalOpen(false);
+        setVideos([]);
     };
 
     const handleDeleteCourse = async (id) => {
@@ -213,6 +283,7 @@ const KurseviPage = () => {
                             course={course} 
                             onEdit={openEditModal} 
                             onDelete={handleDeleteCourse} 
+                            onViewVideos={fetchVideos} 
                         />
                     ))}
                 </tbody>
@@ -230,6 +301,43 @@ const KurseviPage = () => {
                     </button>
                 ))}
             </div>
+
+            {/* Modal za prikaz i dodavanje klipova */}
+            {videosModalOpen && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <h3>Klipovi za kurs</h3>
+                        <ul>
+                            {videos.map(video => (
+                                <li key={video.id}>
+                                    {video.title || "Video"}
+                                    <button onClick={() => deleteVideo(video.id)} className="action-button delete">
+                                        Obriši
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                        <input
+                            type="text"
+                            value={newVideoTitle}
+                            onChange={(e) => setNewVideoTitle(e.target.value)}
+                            placeholder="Unesite naslov klipa"
+                        />
+                        <input
+                            type="text"
+                            value={newVideoLink}
+                            onChange={(e) => setNewVideoLink(e.target.value)}
+                            placeholder="Unesite link do novog klipa"
+                        />
+                        <button onClick={addVideo} className="submit-button">
+                            Dodaj klip
+                        </button>
+                        <button onClick={closeVideosModal} className="cancel-button">
+                            Zatvori
+                        </button>
+                    </div>
+                </div>
+            )}
 
             {/* Modal za uređivanje kursa */}
             {isModalOpen && (
