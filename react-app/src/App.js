@@ -5,6 +5,8 @@ import RegisterPage from './komponente/RegisterPage';
 import LoginPage from './komponente/LoginPage';
 import Navbar from './komponente/Navbar';
 import KurseviPage from './komponente/KurseviPage';
+import MyCoursesPage from './komponente/MyCoursesPage';
+import CourseVideosPage from './komponente/CourseVideosPage';
 
 const App = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
@@ -33,6 +35,8 @@ const App = () => {
                         path="/login"
                         element={<LoginPage handleLogin={handleLogin} />}
                     />
+                    <Route path="/moji-kursevi" element={<MyCoursesPage />} /> 
+                    <Route path="/courses/:id/videos" element={<CourseVideosPage />} />
                     <Route path="/courses" element={<KurseviPage />} /> 
 
                 </Routes>

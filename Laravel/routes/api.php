@@ -32,9 +32,11 @@ Route::get('/courses', [CourseController::class, 'index']);
 // Rute za ulogovanog
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
+Route::get('/sviKlipoviKursa/{id}', [CourseController::class, 'getCourseVideos'])->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/courses/{id}', [CourseController::class, 'show']);
+    Route::get('/my-courses', [CourseController::class, 'myCourses']);
     Route::post('/courses', [CourseController::class, 'store']);
     Route::put('/courses/{id}', [CourseController::class, 'update']);
     Route::delete('/courses/{id}', [CourseController::class, 'destroy']);

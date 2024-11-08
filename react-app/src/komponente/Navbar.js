@@ -25,6 +25,7 @@ const Navbar = ({ isLoggedIn, handleLogout }) => {
             <div className="navbar-links">
                 {isLoggedIn ? (
                     <>
+                    <Link to="/moji-kursevi" className="nav-link">Moji kursevi</Link>
                     <Link to="/courses" className="nav-link">Kursevi</Link>
                     <button onClick={handleLogout} className="nav-button">
                         Logout

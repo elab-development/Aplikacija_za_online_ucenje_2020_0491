@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Course;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class CourseController extends Controller
@@ -61,5 +63,25 @@ class CourseController extends Controller
         $course->delete();
 
         return response()->json(['message' => 'Course deleted successfully'], 200);
+    }
+
+    public function myCourses()
+    {
+        $userId = Auth::id();
+
+        $courses = DB::table('courses')
+            ->join('course_users', 'courses.id', '=', 'course_users.course_id')
+            ->where('course_users.user_id', $userId)
+            ->select('courses.id', 'courses.title')
+            ->get();
+
+        return response()->json($courses);
+    }
+
+    public function getCourseVideos($id)
+    {
+        $course = Course::with('videos')->findOrFail($id);
+    
+        return response()->json($course->videos);
     }
 }
