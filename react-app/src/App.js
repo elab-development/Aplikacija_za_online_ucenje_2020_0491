@@ -7,6 +7,7 @@ import Navbar from './komponente/Navbar';
 import KurseviPage from './komponente/KurseviPage';
 import MyCoursesPage from './komponente/MyCoursesPage';
 import CourseVideosPage from './komponente/CourseVideosPage';
+import BookSearch from './komponente/BookSearch';
 
 const App = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
@@ -35,6 +36,8 @@ const App = () => {
                         path="/login"
                         element={<LoginPage handleLogin={handleLogin} />}
                     />
+                    
+                    <Route path="/knjige" element={<BookSearch />} /> 
                     <Route path="/moji-kursevi" element={<MyCoursesPage />} /> 
                     <Route path="/courses/:id/videos" element={<CourseVideosPage />} />
                     <Route path="/courses" element={<KurseviPage />} /> 

@@ -25,6 +25,7 @@ const Navbar = ({ isLoggedIn, handleLogout }) => {
             <div className="navbar-links">
                 {isLoggedIn ? (
                     <>
+                    <Link to="/knjige" className="nav-link">Pretraga knjiga</Link>
                     <Link to="/moji-kursevi" className="nav-link">Moji kursevi</Link>
                     <Link to="/courses" className="nav-link">Kursevi</Link>
                     <button onClick={handleLogout} className="nav-button">
@@ -33,6 +34,7 @@ const Navbar = ({ isLoggedIn, handleLogout }) => {
                 </>
                 ) : (
                     <>
+                        <Link to="/knjige" className="nav-link">Pretraga knjiga</Link>
                         <Link to="/login" className="nav-link">Login</Link>
                         <Link to="/register" className="nav-link">Register</Link>
                     </>
