@@ -1,4 +1,3 @@
-// CourseRow.js
 import React from 'react';
 import './KurseviPage.css';
 

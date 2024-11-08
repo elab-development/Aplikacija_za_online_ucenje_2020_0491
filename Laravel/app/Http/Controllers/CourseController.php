@@ -17,7 +17,7 @@ class CourseController extends Controller
 
     public function show($id)
     {
-        $course = Course::with('teacher', 'videos', 'students')->findOrFail($id);
+        $course = Course::with('teacher', 'videos')->findOrFail($id);
         return response()->json($course, 200);
     }
 

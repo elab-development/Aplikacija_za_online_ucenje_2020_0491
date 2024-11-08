@@ -23,11 +23,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// Rute za neulogovanog korisnika
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/courses', [CourseController::class, 'index']);
+
+
+// Rute za ulogovanog
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
-Route::get('/courses', [CourseController::class, 'index']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/courses/{id}', [CourseController::class, 'show']);
