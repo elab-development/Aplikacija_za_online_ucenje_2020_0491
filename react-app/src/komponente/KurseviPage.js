@@ -11,6 +11,8 @@ const KurseviPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
+    const [sortOrder, setSortOrder] = useState('asc'); 
+
     // Paginacija
     const [currentPage, setCurrentPage] = useState(1);
     const coursesPerPage = 5;
@@ -129,6 +131,18 @@ const KurseviPage = () => {
         }
     };
 
+    const handleSort = () => {
+        const sortedCourses = [...filteredCourses].sort((a, b) => {
+            if (sortOrder === 'asc') {
+                return a.title.localeCompare(b.title);
+            } else {
+                return b.title.localeCompare(a.title);
+            }
+        });
+        setFilteredCourses(sortedCourses);
+        setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    };
+
     const handleSearch = () => {
         const filtered = courses.filter(course => {
             const titleMatch = course.title.toLowerCase().includes(search.title.toLowerCase());
@@ -179,6 +193,9 @@ const KurseviPage = () => {
                     ))}
                 </select>
                 <button onClick={handleSearch} className="search-button">Pretraži</button>
+                <button onClick={handleSort} className="sort-button">
+                    Sortiraj po naslovu ({sortOrder === 'asc' ? 'Z-A': 'A-Z' })
+                </button>
             </div>
 
             <table className="courses-table">

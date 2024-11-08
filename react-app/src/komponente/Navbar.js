@@ -6,7 +6,7 @@ const Navbar = ({ isLoggedIn, handleLogout }) => {
 
     useEffect(() => {
         const handleScroll = () => {
-            if (window.scrollY > 100) {
+            if (window.scrollY > 200) {
                 setIsSticky(true);
             } else {
                 setIsSticky(false);
