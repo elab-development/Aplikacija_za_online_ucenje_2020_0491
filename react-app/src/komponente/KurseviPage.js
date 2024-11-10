@@ -17,6 +17,9 @@ const KurseviPage = () => {
     const [newVideoLink, setNewVideoLink] = useState("");
     const [newVideoTitle, setNewVideoTitle] = useState("");
     const [sortOrder, setSortOrder] = useState('asc'); 
+    const [isStudentModalOpen, setIsStudentModalOpen] = useState(false);
+    const [studentEmail, setStudentEmail] = useState('');
+    const [studentMessage, setStudentMessage] = useState('');
 
     // Paginacija
     const [currentPage, setCurrentPage] = useState(1);
@@ -143,6 +146,42 @@ const KurseviPage = () => {
         } catch (error) {
             console.error('Error deleting course:', error);
         }
+    };
+
+    const handleAddStudentToCourse = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch('http://localhost:8000/api/courses/add-student', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email: studentEmail, course_id: selectedCourseId }),
+            });
+    
+            if (response.status === 200) {
+                setStudentMessage('Student uspešno dodat na kurs.');
+                handleCloseStudentModal();
+            } else {
+                const data = await response.json();
+                setStudentMessage(data.message || 'Došlo je do greške.');
+            }
+        } catch (error) {
+            console.error('Error adding student to course:', error);
+            setStudentMessage('Došlo je do greške.');
+        }
+    };
+
+    const handleOpenStudentModal = (courseId) => {
+        setSelectedCourseId(courseId);
+        setIsStudentModalOpen(true);
+    };
+
+    const handleCloseStudentModal = () => {
+        setIsStudentModalOpen(false);
+        setStudentEmail('');
+        setStudentMessage('');
     };
 
     const openEditModal = (course) => {
@@ -284,6 +323,7 @@ const KurseviPage = () => {
                             onEdit={openEditModal} 
                             onDelete={handleDeleteCourse} 
                             onViewVideos={fetchVideos} 
+                            onAddStudent={handleOpenStudentModal}
                         />
                     ))}
                 </tbody>
@@ -419,6 +459,32 @@ const KurseviPage = () => {
                     </div>
                 </div>
             )}
+
+            {/* Modal za dodavanje studenta */}
+            {isStudentModalOpen && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <h3>Dodaj studenta na kurs</h3>
+                        <input
+                            type="email"
+                            placeholder="Email studenta"
+                            value={studentEmail}
+                            onChange={(e) => setStudentEmail(e.target.value)}
+                        />
+                        <p className="success-message">{studentMessage}</p>
+                        <div className="modal-buttons">
+                            <button onClick={handleAddStudentToCourse} className="submit-button">
+                                Potvrdi
+                            </button>
+                            <button onClick={handleCloseStudentModal} className="cancel-button">
+                                Odustani
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+
         </div>
     );
 };

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Course;
+use App\Models\CourseUser;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -83,5 +85,27 @@ class CourseController extends Controller
         $course = Course::with('videos')->findOrFail($id);
     
         return response()->json($course->videos);
+    }
+
+    public function addStudentToCourse(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'course_id' => 'required|exists:courses,id',
+        ]);
+        
+        $student = User::where('email', $request->email)->where('role', 'student')->first();
+    
+        if (!$student) {
+            return response()->json(['message' => 'Student sa unetim email-om ne postoji ili nema odgovarajuću ulogu.'], 404);
+        }
+    
+        CourseUser::create([
+            'user_id' => $student->id,
+            'course_id' => $request->course_id,
+            'datum_upisa' => now(),
+        ]);
+    
+        return response()->json(['message' => 'Student uspešno dodat na kurs.'], 200);
     }
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import './KurseviPage.css';
 
-const CourseRow = ({ course, onEdit, onDelete, onViewVideos }) => {
+const CourseRow = ({ course, onEdit, onDelete, onViewVideos, onAddStudent}) => {
     return (
         <tr>
             <td>{course.title}</td>
@@ -15,6 +15,9 @@ const CourseRow = ({ course, onEdit, onDelete, onViewVideos }) => {
                 </button>
                 <button onClick={() => onViewVideos(course.id)} className="action-button videos">
                     Klipovi
+                </button>
+                <button onClick={() => onAddStudent(course.id)} className="action-button add-student">
+                    Dodaj studenta
                 </button>
             </td>
         </tr>

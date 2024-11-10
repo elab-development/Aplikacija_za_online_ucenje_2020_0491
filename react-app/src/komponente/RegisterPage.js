@@ -33,7 +33,8 @@ const RegisterPage = ({ handleLogin }) => {
                 const data = await response.json();
                 setMessage('Registration successful!');
                 localStorage.setItem('token', data.token);
-                handleLogin(); // Ažuriraj stanje prijave u App komponenti
+                localStorage.setItem('role', data.user.role);
+                handleLogin(); 
             } else {
                 const data = await response.json();
                 setErrors(data.errors);

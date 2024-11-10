@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../App.css';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = ({ handleLogin }) => {
     const [formData, setFormData] = useState({
@@ -8,6 +9,7 @@ const LoginPage = ({ handleLogin }) => {
     });
     const [errors, setErrors] = useState({});
     const [message, setMessage] = useState('');
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -31,7 +33,9 @@ const LoginPage = ({ handleLogin }) => {
                 const data = await response.json();
                 setMessage('Login successful!');
                 localStorage.setItem('token', data.token);
-                handleLogin(); // Ažuriraj stanje prijave u App komponenti
+                localStorage.setItem('role', data.user.role);
+                handleLogin();
+                navigate('/'); // Redirekcija nakon prijave
             } else {
                 const data = await response.json();
                 setErrors(data.errors || { message: data.message });

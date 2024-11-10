@@ -50,6 +50,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('course-users', CourseUserController::class);
 });
 
+Route::post('/courses/add-student', [CourseController::class, 'addStudentToCourse'])->middleware('auth:sanctum');
+
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', UserController::class);
 });

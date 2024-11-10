@@ -11,20 +11,22 @@ import BookSearch from './komponente/BookSearch';
 
 const App = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
+    const [role, setRole] = useState(localStorage.getItem('role') || '');
 
-    // Funkcija za ručno ažuriranje stanja prijave kada se korisnik uspešno prijavi ili registruje
     const handleLogin = () => {
         setIsLoggedIn(true);
+        setRole(localStorage.getItem('role'));
     };
 
     const handleLogout = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('role');
         setIsLoggedIn(false);
     };
 
     return (
         <Router>
-            <Navbar isLoggedIn={isLoggedIn} handleLogout={handleLogout} />
+            <Navbar isLoggedIn={isLoggedIn} role={role} handleLogout={handleLogout} />
             <div className="main-content">
                 <Routes>
                     <Route path="/" element={<HomePage />} />
@@ -35,7 +37,7 @@ const App = () => {
                     <Route
                         path="/login"
                         element={<LoginPage handleLogin={handleLogin} />}
-                    />
+                        />
                     
                     <Route path="/knjige" element={<BookSearch />} /> 
                     <Route path="/moji-kursevi" element={<MyCoursesPage />} /> 
