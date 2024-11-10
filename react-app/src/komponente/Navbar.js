@@ -13,7 +13,7 @@ const Navbar = ({ isLoggedIn, role, handleLogout }) => {
     
     useEffect(() => {
         const handleScroll = () => {
-            setIsSticky(window.scrollY > 300);
+            setIsSticky(window.scrollY > 100);
         };
 
         window.addEventListener('scroll', handleScroll);
