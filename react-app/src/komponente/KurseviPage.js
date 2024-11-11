@@ -97,6 +97,7 @@ const KurseviPage = () => {
             if (response.ok) {
                 fetchVideos(selectedCourseId); // Osveži listu klipova
                 setNewVideoLink("");
+                setNewVideoTitle("");
             }
         } catch (error) {
             console.error('Error adding video:', error);

@@ -35,11 +35,11 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 Route::get('/sviKlipoviKursa/{id}', [CourseController::class, 'getCourseVideos'])->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/courses/{id}', [CourseController::class, 'show']);
-    Route::get('/my-courses', [CourseController::class, 'myCourses']);
-    Route::post('/courses', [CourseController::class, 'store']);
-    Route::put('/courses/{id}', [CourseController::class, 'update']);
-    Route::delete('/courses/{id}', [CourseController::class, 'destroy']);
+    Route::get('/courses/{id}', [CourseController::class, 'show'])->middleware('role:teacher');
+    Route::get('/my-courses', [CourseController::class, 'myCourses'])->middleware('role:student');
+    Route::post('/courses', [CourseController::class, 'store'])->middleware('role:teacher');
+    Route::put('/courses/{id}', [CourseController::class, 'update'])->middleware('role:teacher');
+    Route::delete('/courses/{id}', [CourseController::class, 'destroy'])->middleware('role:teacher');
 });
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -50,7 +50,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('course-users', CourseUserController::class);
 });
 
-Route::post('/courses/add-student', [CourseController::class, 'addStudentToCourse'])->middleware('auth:sanctum');
+Route::post('/courses/add-student', [CourseController::class, 'addStudentToCourse'])->middleware(['auth:sanctum', 'role:teacher']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
