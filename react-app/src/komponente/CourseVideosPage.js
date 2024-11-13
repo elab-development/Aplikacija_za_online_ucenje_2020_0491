@@ -29,7 +29,7 @@ const CourseVideosPage = () => {
             return `https://www.youtube.com/embed/${videoId}`;
         }
         // Dodaj sličnu logiku za Vimeo ili druge platforme, ako je potrebno
-        return link; // Vrati originalan link ako nije YouTube ili Vimeo
+        return link; // Vrati originalan link ako nije YouTube
     };
 
     return (
